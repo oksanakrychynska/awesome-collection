@@ -2,7 +2,7 @@
 /dist
 /tmp
 /out-tsc
-.angular
+.angular/
 # Node
 /node_modules
 npm-debug.log
