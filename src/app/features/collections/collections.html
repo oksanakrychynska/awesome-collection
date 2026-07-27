@@ -1,0 +1,65 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <span class="brand-mark">Book collection</span>
+  <span class="toolbar-spacer"></span>
+  <button matButton="outlined" type="button" (click)="logout()">Log out</button>
+</mat-toolbar>
+<div cdkDropListGroup>
+  <div class="collections flex-row justify-start">
+
+  <div class="add-button" matTooltip="Add Collection" (click)="createNewCollection()">
+    <mat-icon>add_notes</mat-icon>
+  </div>
+
+  <div cdkDropList
+       class="example-list"
+       [cdkDropListData]="collectionList"
+       (cdkDropListDropped)="drop($event)">
+    @for (collection of collectionList; track collection.id) {
+      <div class="example-box flex-row justify-space-between"
+           cdkDrag
+           [cdkDragData]="collection"
+           (cdkDragStarted)="onDragging()"
+           (cdkDragEnded)="onDragEnded()">
+        <div class="collection-copy">
+          <span>{{collection.name}}</span>
+          <button matButton="outlined"
+                  [routerLink]="[collection.id]">view collection</button>
+        </div>
+        <div class="collection-actions">
+          <button matIconButton
+                  (click)="collection.favorite = !collection.favorite"
+                  class="example-icon favorite-icon" aria-label="heart icon">
+            <mat-icon  [ngClass]="{'selected': collection.favorite}">favorite</mat-icon>
+          </button>
+          @if (readMode) {
+            <button matIconButton
+                    (click)="onEdit(collection)"
+                    matTooltip="Edit"
+                    aria-label="Edit">
+              <mat-icon class="edit">edit</mat-icon>
+            </button>
+          } @else {
+            <button matIconButton
+                    (click)="onSave()"
+                    matTooltip="Save"
+                    aria-label="Save">
+              <mat-icon class="edit">check</mat-icon>
+            </button>
+          }
+
+        </div>
+
+      </div>
+    }
+  </div>
+</div>
+<div class="footer flex-row align-center justify-center"
+     cdkDropList
+     (cdkDropListDropped)="deleteItem($event)"
+     [ngClass]="{'hidden': !isDragging()}">
+  <div class="footer-content">
+    <mat-icon>delete</mat-icon>
+    <span>Drag here to delete</span>
+  </div>
+</div>
+</div>

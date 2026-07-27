@@ -1,0 +1,131 @@
+<!--//TODO move toolbar to different component-->
+<mat-toolbar color="primary" class="app-toolbar flex-row justify-space-between">
+  <span class="brand-mark">Books</span>
+
+  <div class="buttons">
+    <button
+      class="theme-toggle"
+      matButton="outlined"
+      [attr.aria-pressed]="store.theme() === 'light'"
+      (click)="store.toggleTheme()">
+      {{ store.theme() === 'dark' ? 'Light mode' : 'Dark mode' }}
+    </button>
+
+    <button matButton="outlined" type="button" (click)="logout()" class="logout">Log out</button>
+  </div>
+
+</mat-toolbar>
+
+<main class="main-content">
+  <div class="search-panel">
+    <div class="search-actions">
+      <app-search (search)="onSearch($event)"></app-search>
+
+      <button
+        matButton="filled"
+        class="filter-button"
+        type="button"
+        [class.active]="filtersOpen() || activeFiltersCount()"
+        (click)="toggleFilters()"
+        [attr.aria-expanded]="filtersOpen()"
+        aria-controls="books-filter-panel">
+        <mat-icon>filter_list</mat-icon>
+        <span>Filter</span>
+        @if (activeFiltersCount()) {
+          {{ activeFiltersCount() }}
+        }
+      </button>
+    </div>
+
+    @if (filtersOpen()) {
+      <div class="filters-panel" id="books-filter-panel">
+        <label>
+          <span>Author</span>
+          <select
+            [value]="selectedAuthor()"
+            (change)="onAuthorChange($any($event.target).value)">
+            <option value="">All authors</option>
+            @for (author of authors(); track author) {
+              <option [value]="author">{{ author }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Country</span>
+          <select
+            [value]="selectedCountry()"
+            (change)="onCountryChange($any($event.target).value)">
+            <option value="">All countries</option>
+            @for (country of countries(); track country) {
+              <option [value]="country">{{ country }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Publisher</span>
+          <select
+            [value]="selectedPublisher()"
+            (change)="onPublisherChange($any($event.target).value)">
+            <option value="">All publishers</option>
+            @for (publisher of publishers(); track publisher) {
+              <option [value]="publisher">{{ publisher }}</option>
+            }
+          </select>
+        </label>
+
+        <button
+          class="clear-filters"
+          type="button"
+          [disabled]="!activeFiltersCount()"
+          (click)="clearFilters()">
+          Clear filters
+        </button>
+      </div>
+    }
+
+    <div class="total-books flex-row align-center justify-end">
+      <span>Total books: {{ booksTotal() }}</span>
+    </div>
+
+  </div>
+
+  @if (filteredBooks().length) {
+    <section
+      cdkDropList
+      class="viewport"
+      (scroll)="onBookListScroll($event)"
+      [cdkDropListData]="filteredBooks()"
+      (cdkDropListDropped)="drop($event)">
+      <div class="spacer" [style.height.px]="topSpacerHeight()"></div>
+      @for (item of visibleBooks(); track item.id) {
+        <article cdkDrag class="book-card">
+        <div class="index">{{ item.id }}</div>
+
+        <div class="content">
+          <h2>{{ item.name }}</h2>
+          <p class="author">{{ item.author }}</p>
+
+          <dl class="details">
+            <div>
+              <dt>Publisher</dt>
+              <dd>{{ item.publisher }}</dd>
+            </div>
+            <div>
+              <dt>Country</dt>
+              <dd>{{ item.country }}</dd>
+            </div>
+          </dl>
+        </div>
+        </article>
+      }
+      <div class="spacer" [style.height.px]="bottomSpacerHeight()"></div>
+    </section>
+  } @else {
+    <section class="empty-state">
+      <h2>No books found</h2>
+      <p>Try another title, author, publisher, or country.</p>
+    </section>
+  }
+</main>

@@ -1,0 +1,20 @@
+@use '@angular/material' as mat;
+
+$my-theme: (
+  color: (
+    primary: mat.$green-palette,      // primary color
+    secondary: mat.$yellow-palette,   // secondary color
+    error: mat.$red-palette,           // error color
+    theme-type: light,
+  ),
+  typography: (
+    headline-large: (font-family: 'Roboto', font-weight: 400, line-height: 64px, size: 57px),
+    body-medium: (font-family: 'Roboto', font-weight: 400, line-height: 20px, size: 14px)
+  ),
+  density: 0
+);
+
+body.dark-mode {
+  color-scheme: dark;
+}
+@include mat.theme($my-theme);
