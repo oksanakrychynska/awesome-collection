@@ -45,8 +45,7 @@ export class Books {
   private readonly debouncedTerm = toSignal(
     toObservable(this.searchTerm).pipe(
       debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed()
+      distinctUntilChanged()
     ),
     { initialValue: '' }
   );
