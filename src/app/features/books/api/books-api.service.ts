@@ -2,21 +2,6 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Book} from '../models/book';
 
-interface GoogleBookDto {
-  items: never[];
-  id: string;
-
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-  };
-}
-
-interface GoogleBooksResponse {
-  items?: GoogleBookDto[];
-  totalItems: number;
-}
-
 @Injectable({
   providedIn: 'root',
 })
